@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arctic Solstice: Never Set</title>
   <style>
@@ -35,7 +36,7 @@
     <div id="overlay"><div id="startCard" class="glass"><div class="pill">Arctic Circle</div><div class="pill">June Solstice</div><div class="pill">Gemini Guide</div><div class="pill">Father's Day Reflection</div><h1>Arctic Solstice: Never Set</h1><p>This prototype is a side-scrolling survival game set in the Arctic Circle under the midnight sun. In some Arctic locations during summer, the sun can remain above the horizon through the night for weeks, creating constant daylight and constant exposure.</p><p>Your goal is to cross that endless light using shade, yoga, signal decoding, Juneteenth-inspired freedom captions, and memory. Press start to hear and read a short introduction, then use arrow keys to begin.</p><div style="margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--muted);line-height:1.55;"><strong style="color:var(--ice);">How to play</strong><br>Left and right arrow keys move. Up arrow jumps. Press <span class="mono">E</span> in shade to practice yoga and recover. At the <span class="mono">SHIFT</span> gate, press <span class="mono">E</span> to rotate the code ring until the door opens. Polar bears chase nearby players; ice spikes and bright exposure reduce stamina, while constant strain slowly lowers focus.</div><audio id="introAudio" controls preload="auto" style="width:100%;margin-top:12px;"></audio><div class="api-row"><label for="apiKeyInput" style="color:var(--muted);">Gemini API key (optional, local test only)</label><input id="apiKeyInput" type="password" placeholder="Paste Gemini API key to enable live guide"></div><div class="row"><button class="primary" id="startBtn">Play intro + begin</button><button class="secondary" id="hintPreviewBtn">Preview Gemini behavior</button></div></div></div>
   </div>
   <script>
-    const GEMINI_API_KEY = ''; let useGemini = false;
+    let GEMINI_API_KEY = ''; let useGemini = false;
     const canvas = document.getElementById('game'); const ctx = canvas.getContext('2d');
     const ui = {zoneName:document.getElementById('zoneName'),staminaText:document.getElementById('staminaText'),focusText:document.getElementById('focusText'),reflectionText:document.getElementById('reflectionText'),staminaFill:document.getElementById('staminaFill'),focusFill:document.getElementById('focusFill'),progressFill:document.getElementById('progressFill'),warmthFill:document.getElementById('warmthFill'),storyTitle:document.getElementById('storyTitle'),storyText:document.getElementById('storyText'),geminiBubble:document.getElementById('geminiBubble')};
     const introAudio = document.getElementById('introAudio'); introAudio.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=';
@@ -62,9 +63,17 @@
     }
 
     const game=new Game(); game.resize(); game.loop(); window.addEventListener('resize',()=>game.resize()); window.addEventListener('keydown',e=>game.keys[e.key.toLowerCase()]=true); window.addEventListener('keyup',e=>game.keys[e.key.toLowerCase()]=false);
-    document.getElementById('startBtn').addEventListener('click',()=>{const keyInput=document.getElementById('apiKeyInput'); GEMINI_API_KEY=keyInput?.value?.trim()||''; useGemini=!!GEMINI_API_KEY; const introText='Welcome to the Arctic Circle. Use the left and right arrow keys to move and the up arrow to jump. At the SHIFT gate, press E to rotate the ring and open the door. Bears chase when you get close. Shade, spikes, and collisions affect stamina; prolonged strain reduces focus.'; ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> '+introText+(useGemini?' Live Gemini is enabled for this session.':' Browser voice guide only is enabled for this session.'); document.getElementById('overlay').style.display='none'; game.guide.speak(introText); game.start();});
+    document.getElementById('startBtn').addEventListener('click',()=>{const keyInput=document.getElementById('apiKeyInput'); GEMINI_API_KEY = keyInput?.value?.trim() || ''; useGemini = !!GEMINI_API_KEY; const introText='Welcome to the Arctic Circle. Use the left and right arrow keys to move and the up arrow to jump. At the SHIFT gate, press E to rotate the ring and open the door. Bears chase when you get close. Shade, spikes, and collisions affect stamina; prolonged strain reduces focus.'; ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> '+introText+(useGemini?' Live Gemini is enabled for this session.':' Browser voice guide only is enabled for this session.'); document.getElementById('overlay').style.display='none'; game.guide.speak(introText); game.start();});
     document.getElementById('hintPreviewBtn').addEventListener('click',()=>{ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> Paste a Gemini API key into the start screen field to enable live hints for this session. Click me later for an audio hint.'});
-    document.getElementById('geminiAvatar').addEventListener('click',async()=>{ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> Thinking...'; const hint=await game.guide.getLiveHint(); ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> '+hint; game.guide.speak(hint)});
+    document.getElementById('geminiAvatar').addEventListener('click', async () => {
+      ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> Thinking...';
+      const hint = await game.guide.getLiveHint();
+      ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> ' + hint;
+      game.guide.speak(hint);
+    });
+    window.addEventListener('error', (e) => {
+      ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> Error: ' + (e.message || 'Unknown error');
+    });
   </script>
 </body>
 </html>
