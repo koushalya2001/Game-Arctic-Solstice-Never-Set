@@ -15,9 +15,11 @@
     #story{left:16px;top:102px;width:min(430px,calc(100% - 32px));padding:14px;z-index:2} #story h2{margin:0 0 6px 0;font-size:1.02rem} #story p{margin:0;color:var(--muted);line-height:1.48;font-size:.88rem}
     #controls{right:16px;top:102px;width:min(310px,calc(100% - 32px));padding:14px;z-index:2} #controls ul{margin:8px 0 0 18px;color:var(--muted);line-height:1.45}
     #geminiDock{right:18px;bottom:18px;display:flex;align-items:end;gap:10px;z-index:3} #geminiAvatar{width:74px;height:74px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:radial-gradient(circle at 35% 30%,#d5fbff 0%,#8be0ff 28%,#4ba3ff 56%,#1f2d77 100%);box-shadow:0 12px 32px rgba(43,130,255,.35),inset 0 0 24px rgba(255,255,255,.25);display:grid;place-items:center;font-size:1.8rem;cursor:pointer;animation:floaty 2.8s ease-in-out infinite} #geminiBubble{max-width:380px;padding:14px 16px;border-radius:18px 18px 18px 6px;background:rgba(6,10,20,.92);border:1px solid rgba(139,224,255,.24);color:var(--text);font-size:.92rem;line-height:1.5;box-shadow:0 16px 34px rgba(0,0,0,.32)} #geminiBubble strong{color:var(--ice)}
+    #geminiAvatar{width:74px;height:74px;border-radius:50%;border:2px solid rgba(255,255,255,.28);background:radial-gradient(circle at 35% 30%,#d5fbff 0%,#8be0ff 28%,#4ba3ff 56%,#1f2d77 100%);box-shadow:0 0 0 0 rgba(139,224,255,.0),0 12px 32px rgba(43,130,255,.35),inset 0 0 24px rgba(255,255,255,.25);display:grid;place-items:center;font-size:1.8rem;cursor:pointer;animation:floaty 2.8s ease-in-out infinite,pulseGlow 1.8s ease-in-out infinite}
     #overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,8,14,.72),rgba(6,10,18,.84));display:flex;align-items:center;justify-content:center;padding:18px;z-index:10} #startCard{max-width:860px;padding:22px} #startCard h1{margin:0 0 12px 0;font-size:clamp(2rem,4vw,3.6rem)} #startCard p{color:var(--muted);line-height:1.7} .pill{display:inline-block;padding:6px 10px;border-radius:999px;margin:0 8px 10px 0;background:rgba(255,255,255,.06);color:var(--ice);font-size:.85rem}
     button{border:0;padding:12px 16px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer;transition:transform .18s ease,opacity .18s ease} button:hover{transform:translateY(-1px)} .primary{background:var(--gold);color:#231800}.secondary{background:rgba(255,255,255,.08);color:var(--text)} .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px} .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.api-row{display:grid;gap:10px;margin-top:14px}.api-row input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);font:inherit}
     @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(139,224,255,.18),0 12px 32px rgba(43,130,255,.35),inset 0 0 24px rgba(255,255,255,.25)}50%{box-shadow:0 0 0 14px rgba(139,224,255,.08),0 16px 38px rgba(43,130,255,.48),inset 0 0 30px rgba(255,255,255,.35)}}
     @media (max-width:900px){#hud{grid-template-columns:1fr 1fr;top:10px;left:10px;right:10px}#story,#controls{width:calc(100% - 20px);left:10px;right:10px}#story{top:96px}#controls{top:auto;bottom:140px}#geminiDock{right:12px;bottom:18px}#geminiBubble{max-width:270px}}
   </style>
 </head>
@@ -32,7 +34,10 @@
     </div>
     <div id="story" class="glass"><h2 id="storyTitle">Round I · Midnight Sun</h2><p id="storyText">Round I is about surviving the endless daylight. Move through the many shadow bands, use yoga to recover, and keep your stamina above zero before the next challenge begins. When you reach Round II, solve the Turing gate; when you reach Round III, press R to finish the reflection ending.</p></div>
     <div id="controls" class="glass"><div class="label">Quick guide</div><ul><li><strong>Round I:</strong> move between blue shadows and press <span class="mono">E</span> to recover.</li><li><strong>Round II:</strong> reach the Enigma gate to open the cipher pop-up, then type <span class="mono">2031</span>.</li><li><strong>Round III:</strong> collect the three Juneteenth markers, then reach the Memory Cairn and answer the Father’s Day reflection to win.</li><li>Use <span class="mono">← / →</span> to move and <span class="mono">↑</span> to jump.</li><li>Polar bears, spikes, and exposure drain stamina.</li></ul></div>
-    <div id="geminiDock"><div id="geminiBubble"><strong>Gemini guide:</strong> Use shade to survive the midnight sun. Click me for a live hint.</div><div id="geminiAvatar" title="Ask Gemini">✦</div></div>
+    <div id="geminiDock" style="position:fixed;right:18px;bottom:18px;display:flex;align-items:end;gap:10px;z-index:50;pointer-events:auto">
+  <div id="geminiBubble"><strong>Gemini guide:</strong> Use shade to survive the midnight sun. Click me for a live hint.</div>
+  <div id="geminiAvatar" title="Ask Gemini" style="pointer-events:auto">✦</div>
+</div>
     <div id="cipherPopup" style="display:none;position:fixed;inset:0;z-index:20;background:rgba(4,8,14,.68);align-items:center;justify-content:center;">
   <div class="glass" style="max-width:520px;width:min(520px,92vw);padding:20px">
     <h2 style="margin:0 0 10px 0">Turing Cipher</h2>
@@ -46,7 +51,16 @@
     <div id="cipherMsg" style="margin-top:10px;color:var(--gold);min-height:20px"></div>
   </div>
 </div>
-<div id="overlay"><div id="startCard" class="glass"><div class="pill">Arctic Circle</div><div class="pill">June Solstice</div><div class="pill">Gemini Guide</div><div class="pill">Father's Day Reflection</div><h1>Arctic Solstice: Never Set</h1><p>This prototype is a side-scrolling survival game set in the Arctic Circle under the midnight sun. In some Arctic locations during summer, the sun can remain above the horizon through the night for weeks, creating constant daylight and constant exposure.</p><p>Your goal is to cross that endless light using shade, yoga, signal decoding, Juneteenth-inspired freedom captions, and memory. Press start to hear and read a short introduction, then use arrow keys to begin.</p><div style="margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--muted);line-height:1.55;"><strong style="color:var(--ice);">How to play</strong><br>Left and right arrow keys move. Up arrow jumps. Press <span class="mono">E</span> in shade to practice yoga and recover. At the <span class="mono">SHIFT</span> gate, press <span class="mono">E</span> to rotate the code ring until the door opens. Polar bears chase nearby players; ice spikes and bright exposure reduce stamina, while constant strain slowly lowers focus.</div><audio id="introAudio" controls preload="auto" style="width:100%;margin-top:12px;"></audio><div class="api-row"><label for="apiKeyInput" style="color:var(--muted);">Gemini API key (optional, local test only)</label><input id="apiKeyInput" type="password" placeholder="Paste Gemini API key to enable live guide"></div><div class="row"><button class="primary" id="startBtn">Play intro + begin</button><button class="secondary" id="hintPreviewBtn">Preview Gemini behavior</button></div></div></div>
+<div id="overlay"><div id="startCard" class="glass">
+  <div class="pill">Arctic Circle</div>
+  <div class="pill">June Solstice</div><div class="pill">Gemini Guide</div><div class="pill">Father's Day Reflection</div><h1>Arctic Solstice: Never Set</h1><p>This prototype is a side-scrolling survival game set in the Arctic Circle under the midnight sun. In some Arctic locations during summer, the sun can remain above the horizon through the night for weeks, creating constant daylight and constant exposure.</p><p>Your goal is to cross that endless light using shade, yoga, signal decoding, Juneteenth-inspired freedom captions, and memory. Press start to hear and read a short introduction, then use arrow keys to begin.</p><div style="margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--muted);line-height:1.55;"><strong style="color:var(--ice);">How to play</strong><br>Left and right arrow keys move. Up arrow jumps. Press <span class="mono">E</span> in shade to practice yoga and recover. At the <span class="mono">SHIFT</span> gate, press <span class="mono">E</span> to rotate the code ring until the door opens. Polar bears chase nearby players; ice spikes and bright exposure reduce stamina, while constant strain slowly lowers focus.</div><audio id="introAudio" controls preload="auto" style="width:100%;margin-top:12px;"></audio>
+  <div class="api-row">
+  <label for="apiKeyInput" style="color:var(--muted);">Gemini API key (optional, local test only)</label>
+  <input id="apiKeyInput" type="password" placeholder="Paste Gemini API key to enable live guide">
+  <div id="geminiHow" style="color:var(--ice);font-size:.9rem;line-height:1.45">
+    After entering the key, click <b>Play intro + begin</b>. Then click the <b>✦</b> Gemini avatar at the bottom-right to request a live contextual hint. The hint will reflect the current zone, stamina, focus, and game flags.
+  </div>
+</div><div class="row"><button class="primary" id="startBtn">Play intro + begin</button><button class="secondary" id="hintPreviewBtn">Preview Gemini behavior</button></div></div></div>
   </div>
   <script>
     let GEMINI_API_KEY = ''; let useGemini = false;
@@ -169,14 +183,29 @@
 
     canvas.addEventListener('click', () => openCipher());
 
-    document.getElementById('startBtn').addEventListener('click',()=>{const keyInput=document.getElementById('apiKeyInput'); GEMINI_API_KEY = keyInput?.value?.trim() || ''; useGemini = !!GEMINI_API_KEY; const introText='Welcome to the Arctic Circle. Use the left and right arrow keys to move and the up arrow to jump. At the SHIFT gate, press E to rotate the ring and open the door. Bears chase when you get close. Shade, spikes, and collisions affect stamina; prolonged strain reduces focus.'; ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> '+introText+(useGemini?' Live Gemini is enabled for this session.':' Browser voice guide only is enabled for this session.'); document.getElementById('overlay').style.display='none'; game.guide.speak(introText); game.start();});
-    document.getElementById('hintPreviewBtn').addEventListener('click',()=>{ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> Paste a Gemini API key into the start screen field to enable live hints for this session. Click me later for an audio hint.'});
-    document.getElementById('geminiAvatar').addEventListener('click', async () => {
-      ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> Thinking...';
-      const hint = await game.guide.getLiveHint();
-      ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> ' + hint;
-      game.guide.speak(hint);
-    });
+document.getElementById('startBtn').addEventListener('click',()=>{
+  const keyInput=document.getElementById('apiKeyInput');
+  GEMINI_API_KEY = keyInput?.value?.trim() || '';
+  useGemini = !!GEMINI_API_KEY;
+
+  const introText='Welcome to the Arctic Circle. Use the left and right arrow keys to move and the up arrow to jump. At the SHIFT gate, press E to rotate the ring and open the door. Bears chase when you get close. Shade, spikes, and collisions affect stamina; prolonged strain reduces focus.';
+
+  ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> '+introText+(useGemini?' Live Gemini is enabled for this session.':' Browser voice guide only is enabled for this session.');
+  document.getElementById('overlay').style.display='none';
+  game.guide.speak(introText);
+  game.start();
+});
+
+document.getElementById('hintPreviewBtn').addEventListener('click',()=>{
+  ui.geminiBubble.innerHTML='<strong>Gemini guide:</strong> Paste a Gemini API key into the start screen field to enable live hints for this session. Click me later for an audio hint.';
+});
+
+document.getElementById('geminiAvatar').addEventListener('click', async () => {
+  ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> Thinking...';
+  const hint = await game.guide.getLiveHint();
+  ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> ' + hint;
+  game.guide.speak(hint);
+});
     window.addEventListener('error', (e) => {
       ui.geminiBubble.innerHTML = '<strong>Gemini guide:</strong> Error: ' + (e.message || 'Unknown error');
     });
